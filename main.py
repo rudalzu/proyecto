@@ -16,5 +16,5 @@ from nltk.tokenize import word_tokenize # word_tokenize nos ayuda a tokenizar te
 from nltk.corpus import wordnet # wordnet es una libreria para analizar sinonimos
 
 # indicamos la ruta donde nltk buscara los datos descargados en nuestro cumputador
-# nltk.data.path.append('C:\Users\USER\AppData\Roaming\nltk_data')
+nltk.data.path.append('C:\Users\USER\AppData\Roaming\nltk_data')
 nltk.download('punkt')
