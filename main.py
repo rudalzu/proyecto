@@ -18,7 +18,7 @@ from nltk.corpus import wordnet # wordnet es una libreria para analizar sinonimo
 # Indicamos la ruta donde nltk buscara los datos descargados en nuestro computador
 nltk.data.path.append(r'C:\Users\USER\AppData\Roaming\nltk_data')
 nltk.download('punkt') # es un paquete para dividir frases en palabras
-nltk.download('punkt_tab') jkg,,, + # paquete para encontrar sinonimos en palabras
+nltk.download('punkt_tab') # paquete para encontrar sinonimos en palabras
 
 # función para cargar las peliculas desde un archivo csv
 
