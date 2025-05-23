@@ -9,7 +9,7 @@ La función get_movies_by_category(category) ayuda a encontrar peliculas segun s
 
 # Importamos las herramientas necesarias para continuar nuestra API
 from fastapi import FastAPI, HTTPException # FastAPI nos ayuda a crear la API, HTTPException nos ayuda a mejorar errores
-from fastapi.responses import HTMLResponse # HTMLResponse nos ayuda a mejorar respuestas HTML, JSONResponse nos ayuda a manejar respuestas
+from fastapi.responses import HTMLResponse, JSONResponse # HTMLResponse nos ayuda a mejorar respuestas HTML, JSONResponse nos ayuda a manejar respuestas
 import pandas as pd # pandas nos ayuda a manejar tablas como si fuera un Excel
 import nltk # nltk es una libreria para procesar texto y analizar palabras
 from nltk.tokenize import word_tokenize # word_tokenize nos ayuda a tokenizar texto, es decir, a convertirlo en palabras
@@ -18,7 +18,7 @@ from nltk.corpus import wordnet # wordnet es una libreria para analizar sinonimo
 # Indicamos la ruta donde nltk buscara los datos descargados en nuestro computador
 nltk.data.path.append(r'C:\Users\USER\AppData\Roaming\nltk_data')
 nltk.download('punkt') # es un paquete para dividir frases en palabras
-nltk.download('wordnet') # paquete para encontrar sinonimos en palabras
+nltk.download('punkt_tab') jkg,,, + # paquete para encontrar sinonimos en palabras
 
 # función para cargar las peliculas desde un archivo csv
 
@@ -62,3 +62,20 @@ def get_movies():
 def get_movies(id: str):
      # buscamos en la lista de películas la que tenga el mismo ID
      return next((m for m in movies_list if m ['id'] == id), {"detalle": "película no encontrada"})
+# Ruta del chatbot que responde con películas segun palabras clave de la categoria
+@app.get('/chatbot', tags=['chatbot'])
+def chatbot(query: str):
+    # Dividimos la consulta en palabras clave, para entender mejor la intension del usuario
+    query_words = word_tokenize(query.lower())
+    # Buscamos sinonimos de las palabras clave para ampliar la busqueda
+    synonyms = {word for q in query_words for word in get_synonyms(q)} | set(query_words)
+    
+    # Filtramos la lista de peliculas buscando coinsidencias en la categoria
+    results =[m for m in movies_list if any (s in m ['category'].lower() for s in synonyms)]
+    
+    # Si encontramos las peliculas, enviamos la lista de películas; sino, ostramos un mensaje de que no se encontraron cinsidencias
+    
+    return JSONResponse (content={
+    "respuesta": "aqui tienes algunas peliculas relacionadas." if results else "no encontre peliculas en esa categoria.",
+    "peliculas": results
+    })
